@@ -112,51 +112,50 @@ demultiplexing()
 {
 #mismatches equal 0
 
-cat "$i" | perl fastx_barcode_splitter.pl --mismatches 0 --bcfile "$rawreads_dir"bar9.txt --prefix "$rawreads_dir"/fqfiles/"$idrun"_bar9_M0_ --suffix ".fq" --bol
-cat "$rawreads_dir"/fqfiles/"$idrun"_bar9_M0_unmatched.fq | perl fastx_barcode_splitter.pl --mismatches 0 --bcfile "$rawreads_dir"bar8.txt --prefix "$rawreads_dir"/fqfiles/"$idrun"_bar8_M0_ --suffix ".fq" --bol
-cat "$rawreads_dir"/fqfiles/"$idrun"_bar8_M0_unmatched.fq | perl fastx_barcode_splitter.pl --mismatches 0 --bcfile "$rawreads_dir"bar7.txt --prefix "$rawreads_dir"/fqfiles/"$idrun"_bar7_M0_ --suffix ".fq" --bol
-cat "$rawreads_dir"/fqfiles/"$idrun"_bar7_M0_unmatched.fq | perl fastx_barcode_splitter.pl --mismatches 0 --bcfile "$rawreads_dir"bar6.txt --prefix "$rawreads_dir"/fqfiles/"$idrun"_bar6_M0_ --suffix ".fq" --bol
-cat "$rawreads_dir"/fqfiles/"$idrun"_bar6_M0_unmatched.fq | perl fastx_barcode_splitter.pl --mismatches 0 --bcfile "$rawreads_dir"bar5.txt --prefix "$rawreads_dir"/fqfiles/"$idrun"_bar5_M0_ --suffix ".fq" --bol
-cat "$rawreads_dir"/fqfiles/"$idrun"_bar5_M0_unmatched.fq | perl fastx_barcode_splitter.pl --mismatches 0 --bcfile "$rawreads_dir"bar4.txt --prefix "$rawreads_dir"/fqfiles/"$idrun"_bar4_M0_ --suffix ".fq" --bol
+cat "$i" | perl fastx_barcode_splitter.pl --mismatches 0 --bcfile "$rawreads_dir"bar9.txt --prefix "$rawreads_dir"fqfiles/"$idrun"_bar9_M0_ --suffix ".fq" --bol
+cat "$rawreads_dir"fqfiles/"$idrun"_bar9_M0_unmatched.fq | perl fastx_barcode_splitter.pl --mismatches 0 --bcfile "$rawreads_dir"bar8.txt --prefix "$rawreads_dir"fqfiles/"$idrun"_bar8_M0_ --suffix ".fq" --bol
+cat "$rawreads_dir"fqfiles/"$idrun"_bar8_M0_unmatched.fq | perl fastx_barcode_splitter.pl --mismatches 0 --bcfile "$rawreads_dir"bar7.txt --prefix "$rawreads_dir"fqfiles/"$idrun"_bar7_M0_ --suffix ".fq" --bol
+cat "$rawreads_dir"fqfiles/"$idrun"_bar7_M0_unmatched.fq | perl fastx_barcode_splitter.pl --mismatches 0 --bcfile "$rawreads_dir"bar6.txt --prefix "$rawreads_dir"fqfiles/"$idrun"_bar6_M0_ --suffix ".fq" --bol
+cat "$rawreads_dir"fqfiles/"$idrun"_bar6_M0_unmatched.fq | perl fastx_barcode_splitter.pl --mismatches 0 --bcfile "$rawreads_dir"bar5.txt --prefix "$rawreads_dir"fqfiles/"$idrun"_bar5_M0_ --suffix ".fq" --bol
+cat "$rawreads_dir"fqfiles/"$idrun"_bar5_M0_unmatched.fq | perl fastx_barcode_splitter.pl --mismatches 0 --bcfile "$rawreads_dir"bar4.txt --prefix "$rawreads_dir"fqfiles/"$idrun"_bar4_M0_ --suffix ".fq" --bol
 
-rm "$rawreads_dir"/fqfiles/"$idrun"_bar9_M0_unmatched.fq
-rm "$rawreads_dir"/fqfiles/"$idrun"_bar8_M0_unmatched.fq
-rm "$rawreads_dir"/fqfiles/"$idrun"_bar7_M0_unmatched.fq
-rm "$rawreads_dir"/fqfiles/"$idrun"_bar6_M0_unmatched.fq
-rm "$rawreads_dir"/fqfiles/"$idrun"_bar5_M0_unmatched.fq
+rm "$rawreads_dir"fqfiles/"$idrun"_bar9_M0_unmatched.fq
+rm "$rawreads_dir"fqfiles/"$idrun"_bar8_M0_unmatched.fq
+rm "$rawreads_dir"fqfiles/"$idrun"_bar7_M0_unmatched.fq
+rm "$rawreads_dir"fqfiles/"$idrun"_bar6_M0_unmatched.fq
+rm "$rawreads_dir"fqfiles/"$idrun"_bar5_M0_unmatched.fq
 
 #mismatches equal 1
 
-cat "$rawreads_dir"/fqfiles/"$idrun"_bar4_M0_unmatched.fq | perl fastx_barcode_splitter.pl --mismatches 1 --bcfile "$rawreads_dir"bar9.txt --prefix "$rawreads_dir"/fqfiles/"$idrun"_bar9_M1_ --suffix ".fq" --bol
-cat "$rawreads_dir"/fqfiles/"$idrun"_bar9_M1_unmatched.fq | perl fastx_barcode_splitter.pl --mismatches 1 --bcfile "$rawreads_dir"bar8.txt --prefix "$rawreads_dir"/fqfiles/"$idrun"_bar8_M1_ --suffix ".fq" --bol
-cat "$rawreads_dir"/fqfiles/"$idrun"_bar8_M1_unmatched.fq | perl fastx_barcode_splitter.pl --mismatches 1 --bcfile "$rawreads_dir"bar7.txt --prefix "$rawreads_dir"/fqfiles/"$idrun"_bar7_M1_ --suffix ".fq" --bol
-cat "$rawreads_dir"/fqfiles/"$idrun"_bar7_M1_unmatched.fq | perl fastx_barcode_splitter.pl --mismatches 1 --bcfile "$rawreads_dir"bar6.txt --prefix "$rawreads_dir"/fqfiles/"$idrun"_bar6_M1_ --suffix ".fq" --bol
-cat "$rawreads_dir"/fqfiles/"$idrun"_bar6_M1_unmatched.fq | perl fastx_barcode_splitter.pl --mismatches 1 --bcfile "$rawreads_dir"bar5.txt --prefix "$rawreads_dir"/fqfiles/"$idrun"_bar5_M1_ --suffix ".fq" --bol
-cat "$rawreads_dir"/fqfiles/"$idrun"_bar5_M1_unmatched.fq | perl fastx_barcode_splitter.pl --mismatches 1 --bcfile "$rawreads_dir"bar4.txt --prefix "$rawreads_dir"/fqfiles/"$idrun"_bar4_M1_ --suffix ".fq" --bol
+cat "$rawreads_dir"fqfiles/"$idrun"_bar4_M0_unmatched.fq | perl fastx_barcode_splitter.pl --mismatches 1 --bcfile "$rawreads_dir"bar9.txt --prefix "$rawreads_dir"fqfiles/"$idrun"_bar9_M1_ --suffix ".fq" --bol
+cat "$rawreads_dir"fqfiles/"$idrun"_bar9_M1_unmatched.fq | perl fastx_barcode_splitter.pl --mismatches 1 --bcfile "$rawreads_dir"bar8.txt --prefix "$rawreads_dir"fqfiles/"$idrun"_bar8_M1_ --suffix ".fq" --bol
+cat "$rawreads_dir"fqfiles/"$idrun"_bar8_M1_unmatched.fq | perl fastx_barcode_splitter.pl --mismatches 1 --bcfile "$rawreads_dir"bar7.txt --prefix "$rawreads_dir"fqfiles/"$idrun"_bar7_M1_ --suffix ".fq" --bol
+cat "$rawreads_dir"fqfiles/"$idrun"_bar7_M1_unmatched.fq | perl fastx_barcode_splitter.pl --mismatches 1 --bcfile "$rawreads_dir"bar6.txt --prefix "$rawreads_dir"fqfiles/"$idrun"_bar6_M1_ --suffix ".fq" --bol
+cat "$rawreads_dir"fqfiles/"$idrun"_bar6_M1_unmatched.fq | perl fastx_barcode_splitter.pl --mismatches 1 --bcfile "$rawreads_dir"bar5.txt --prefix "$rawreads_dir"fqfiles/"$idrun"_bar5_M1_ --suffix ".fq" --bol
+cat "$rawreads_dir"fqfiles/"$idrun"_bar5_M1_unmatched.fq | perl fastx_barcode_splitter.pl --mismatches 1 --bcfile "$rawreads_dir"bar4.txt --prefix "$rawreads_dir"fqfiles/"$idrun"_bar4_M1_ --suffix ".fq" --bol
 
-rm "$rawreads_dir"/fqfiles/"$idrun"_bar4_M0_unmatched.fq
-rm "$rawreads_dir"/fqfiles/"$idrun"_bar9_M1_unmatched.fq
-rm "$rawreads_dir"/fqfiles/"$idrun"_bar8_M1_unmatched.fq
-rm "$rawreads_dir"/fqfiles/"$idrun"_bar7_M1_unmatched.fq
-rm "$rawreads_dir"/fqfiles/"$idrun"_bar6_M1_unmatched.fq
-rm "$rawreads_dir"/fqfiles/"$idrun"_bar5_M1_unmatched.fq
+rm "$rawreads_dir"fqfiles/"$idrun"_bar4_M0_unmatched.fq
+rm "$rawreads_dir"fqfiles/"$idrun"_bar9_M1_unmatched.fq
+rm "$rawreads_dir"fqfiles/"$idrun"_bar8_M1_unmatched.fq
+rm "$rawreads_dir"fqfiles/"$idrun"_bar7_M1_unmatched.fq
+rm "$rawreads_dir"fqfiles/"$idrun"_bar6_M1_unmatched.fq
+rm "$rawreads_dir"fqfiles/"$idrun"_bar5_M1_unmatched.fq
 
 #mismatches equal 2
 
-cat "$rawreads_dir"/fqfiles/"$idrun"_bar4_M1_unmatched.fq | perl fastx_barcode_splitter.pl --mismatches 2 --bcfile "$rawreads_dir"bar9.txt --prefix "$rawreads_dir"/fqfiles/"$idrun"_bar9_M2_ --suffix ".fq" --bol
-cat "$rawreads_dir"/fqfiles/"$idrun"_bar9_M2_unmatched.fq | perl fastx_barcode_splitter.pl --mismatches 2 --bcfile "$rawreads_dir"bar8.txt --prefix "$rawreads_dir"/fqfiles/"$idrun"_bar8_M2_ --suffix ".fq" --bol
-cat "$rawreads_dir"/fqfiles/"$idrun"_bar8_M2_unmatched.fq | perl fastx_barcode_splitter.pl --mismatches 2 --bcfile "$rawreads_dir"bar7.txt --prefix "$rawreads_dir"/fqfiles/"$idrun"_bar7_M2_ --suffix ".fq" --bol
-cat "$rawreads_dir"/fqfiles/"$idrun"_bar7_M2_unmatched.fq | perl fastx_barcode_splitter.pl --mismatches 2 --bcfile "$rawreads_dir"bar6.txt --prefix "$rawreads_dir"/fqfiles/"$idrun"_bar6_M2_ --suffix ".fq" --bol
-cat "$rawreads_dir"/fqfiles/"$idrun"_bar6_M2_unmatched.fq | perl fastx_barcode_splitter.pl --mismatches 2 --bcfile "$rawreads_dir"bar5.txt --prefix "$rawreads_dir"/fqfiles/"$idrun"_bar5_M2_ --suffix ".fq" --bol
-cat "$rawreads_dir"/fqfiles/"$idrun"_bar5_M2_unmatched.fq | perl fastx_barcode_splitter.pl --mismatches 2 --bcfile "$rawreads_dir"bar4.txt --prefix "$rawreads_dir"/fqfiles/"$idrun"_bar4_M2_ --suffix ".fq" --bol
+cat "$rawreads_dir"fqfiles/"$idrun"_bar4_M1_unmatched.fq | perl fastx_barcode_splitter.pl --mismatches 2 --bcfile "$rawreads_dir"bar9.txt --prefix "$rawreads_dir"fqfiles/"$idrun"_bar9_M2_ --suffix ".fq" --bol
+cat "$rawreads_dir"fqfiles/"$idrun"_bar9_M2_unmatched.fq | perl fastx_barcode_splitter.pl --mismatches 2 --bcfile "$rawreads_dir"bar8.txt --prefix "$rawreads_dir"fqfiles/"$idrun"_bar8_M2_ --suffix ".fq" --bol
+cat "$rawreads_dir"fqfiles/"$idrun"_bar8_M2_unmatched.fq | perl fastx_barcode_splitter.pl --mismatches 2 --bcfile "$rawreads_dir"bar7.txt --prefix "$rawreads_dir"fqfiles/"$idrun"_bar7_M2_ --suffix ".fq" --bol
+cat "$rawreads_dir"fqfiles/"$idrun"_bar7_M2_unmatched.fq | perl fastx_barcode_splitter.pl --mismatches 2 --bcfile "$rawreads_dir"bar6.txt --prefix "$rawreads_dir"fqfiles/"$idrun"_bar6_M2_ --suffix ".fq" --bol
+cat "$rawreads_dir"fqfiles/"$idrun"_bar6_M2_unmatched.fq | perl fastx_barcode_splitter.pl --mismatches 2 --bcfile "$rawreads_dir"bar5.txt --prefix "$rawreads_dir"fqfiles/"$idrun"_bar5_M2_ --suffix ".fq" --bol
+cat "$rawreads_dir"fqfiles/"$idrun"_bar5_M2_unmatched.fq | perl fastx_barcode_splitter.pl --mismatches 2 --bcfile "$rawreads_dir"bar4.txt --prefix "$rawreads_dir"fqfiles/"$idrun"_bar4_M2_ --suffix ".fq" --bol
 
-rm "$rawreads_dir"/fqfiles/"$idrun"_bar4_M1_unmatched.fq
-rm "$rawreads_dir"/fqfiles/"$idrun"_bar9_M2_unmatched.fq
-rm "$rawreads_dir"/fqfiles/"$idrun"_bar8_M2_unmatched.fq
-rm "$rawreads_dir"/fqfiles/"$idrun"_bar7_M2_unmatched.fq
-rm "$rawreads_dir"/fqfiles/"$idrun"_bar6_M2_unmatched.fq
-rm "$rawreads_dir"/fqfiles/"$idrun"_bar5_M2_unmatched.fq
-	
+rm "$rawreads_dir"fqfiles/"$idrun"_bar4_M1_unmatched.fq
+rm "$rawreads_dir"fqfiles/"$idrun"_bar9_M2_unmatched.fq
+rm "$rawreads_dir"fqfiles/"$idrun"_bar8_M2_unmatched.fq
+rm "$rawreads_dir"fqfiles/"$idrun"_bar7_M2_unmatched.fq
+rm "$rawreads_dir"fqfiles/"$idrun"_bar6_M2_unmatched.fq
+rm "$rawreads_dir"fqfiles/"$idrun"_bar5_M2_unmatched.fq	
 }
 
 
