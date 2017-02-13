@@ -1,15 +1,15 @@
 #!/usr/bin/python
 
 import sys
-import time
-
-print "Start of run:",time.ctime()
+from itertools import islice
 
 file1 = sys.argv[1]
 mydir = sys.argv[2]
+njobs = sys.argv[3]
 
 set_1 = set(line.strip() for line in open (file1, 'r'))
 
+#create BC barcode files
 output1a = open(mydir+"bar4.txt", "w")
 output1b = open(mydir+"bar5.txt", "w")
 output1c = open(mydir+"bar6.txt", "w")
@@ -25,7 +25,6 @@ for line in set_1:
 	a = line[0]
 	b = line[1]
 	seqs[a] = b
-
 
 for line1 in seqs.items():
 	barid = line1[0]
@@ -58,8 +57,7 @@ output1d.close()
 output1e.close()
 output1f.close()
 
-
-
+#create list of individuals based on barcode file
 individuals = set(seqs.keys())
 
 outputind = open(mydir+"list_individuals.txt", "w")
@@ -68,3 +66,23 @@ for i in individuals:
 	outputind.write(i+"\n");
 
 outputind.close()
+
+
+#creating files for parallel processing in 10 processors
+
+def chunk(it, size):
+    it = iter(it)
+    return iter(lambda: tuple(islice(it, size)), ())
+    
+indprocess = int(len(individuals) / int(njobs)) + 1   #calc the amount of individuals each of sublist should have for 10 processors
+
+myplist = list(chunk(individuals, indprocess))    #use chunk function to split individuals list based on indprocess
+
+nprocess = 0
+
+for i in myplist:
+	nprocess += 1
+	output1z = open(mydir+"process"+str(nprocess)+".tmpp", "w")
+	for j in i:
+		output1z.write(j+"\n");
+	output1z.close()
