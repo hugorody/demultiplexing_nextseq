@@ -60,7 +60,7 @@ echo "RAW READS MUST BE NAMED WITH EXTENTION .fastq"
 echo "Path to raw reads directory:"; read rawreads_dir
 echo "ATTENTION: barcodes must have size from 4 to 9pb"
 echo "Path to barcodes file [ID<tab>SEQUENCE]:"; read barcodes_file
-echo "How many jobs at the same time?"; read njobs
+echo "How many threads to use?"; read njobs
 
 #directories
 mkdir "$rawreads_dir"fqfiles/ #FASTq FILES
@@ -75,7 +75,7 @@ if [ "$bowtie2_pipeline" = "1" ]; then
 
 #variables
 echo "Path to reference *.fasta file [extention must be named fasta (and not fas or fa)]:"; read reference
-echo "Pick the preset Bowtie2 option:\n--very-fast-local\n--fast-local\n--sensitive-local\n--very-sensitive-local\n"; read bowtieoption
+echo "Pick the preset Bowtie2 option: --very-fast-local, --fast-local, --sensitive-local, --very-sensitive-local:"; read bowtieoption
 
 #directories
 mkdir "$rawreads_dir"samfiles/ #SAM FILES
@@ -100,10 +100,12 @@ touch demultiplexing_logs.txt
 if [ "$demultiplexing_pipeline" = "1" ]; then
 
 date | tee -a demultiplexing_logs.txt
+echo "Starting de-multiplexing." | tee -a demultiplexing_logs.txt
+
 
 #Split barcodes file in different files, each file merging barcodes with identical sizes
 python split_barcode_bcfiles.py "$barcodes_file" "$rawreads_dir" "$njobs"
-echo "BCfiles created" | tee -a demultiplexing_logs.txt
+echo "BCfiles created." | tee -a demultiplexing_logs.txt
 
 #De-multiplexing FastX-toolkit step
 
@@ -160,8 +162,6 @@ rm "$rawreads_dir"fqfiles/"$idrun"_bar5_M2_unmatched.fq
 
 
 #run demultiplexing function in parallel for each, normally four, raw reads files
-date | tee -a demultiplexing_logs.txt
-echo "Starting de-multiplexing" | tee -a demultiplexing_logs.txt
 idrun=0
 for i in "$rawreads_dir"*.fastq
 do
@@ -178,15 +178,20 @@ echo "De-multiplexing done!" | tee -a demultiplexing_logs.txt
 #Join files to get individual complete files
 cat "$rawreads_dir"list_individuals.txt | while read line
 do
-cat "$rawreads_dir"/fqfiles/*"$line".fq > "$rawreads_dir"/fqfiles/joined_"$line".fastq  #individuals final files
+cat "$rawreads_dir"fqfiles/*"$line".fq > "$rawreads_dir"fqfiles/joined_"$line".fastq  #individuals final files
 done
 
-echo "All temporary FASTq files joined!" | tee -a demultiplexing_logs.txt
+echo "FASTq files joined." | tee -a demultiplexing_logs.txt
 
-rm "$rawreads_dir"/fqfiles/*bar*       #remove all temporary fastq files
+rm "$rawreads_dir"fqfiles/*bar*       #remove all temporary fastq files
+
+echo "All temporary files were removed." | tee -a demultiplexing_logs.txt
+
 
 #-----------------------------------------------------------------------
 #PHIX CONTROL
+
+echo "Starting PhiX control." | tee -a demultiplexing_logs.txt
 
 #Create Local Blast DB for PhiX genome
 makeblastdb -in phix_genome.fasta -dbtype nucl -out "$rawreads_dir"phix_control/phix.blastdb
@@ -198,7 +203,8 @@ fastqtofasta()
 {
 cat "$i" | while read line
 do
-fastq_to_fasta -Q33 -i "$rawreads_dir"/fqfiles/joined_"$line".fastq -o "$rawreads_dir"/fafiles/joined_"$line".fasta  #convert fastq to fasta using phred33 quality
+echo "Converting FASTq $line to FASTA." | tee -a demultiplexing_logs.txt
+fastq_to_fasta -Q33 -i "$rawreads_dir"fqfiles/joined_"$line".fastq -o "$rawreads_dir"fafiles/joined_"$line".fasta  #convert fastq to fasta using phred33 quality
 done
 }
 
@@ -209,44 +215,70 @@ done
 
 wait
 
+date | tee -a demultiplexing_logs.txt
+echo "All FASTq files converted to FASTA." | tee -a demultiplexing_logs.txt
+
 #cat "$rawreads_dir"list_individuals.txt | while read line
 #do
 #echo "Converting $line from FASTq to FASTA." | tee -a demultiplexing_logs.txt
-#fastq_to_fasta -Q33 -i "$rawreads_dir"/fqfiles/joined_"$line".fastq -o "$rawreads_dir"/fafiles/joined_"$line".fasta  #convert fastq to fasta using phred33 quality
+#fastq_to_fasta -Q33 -i "$rawreads_dir"fqfiles/joined_"$line".fastq -o "$rawreads_dir"fafiles/joined_"$line".fasta  #convert fastq to fasta using phred33 quality
 #done
 
 
 #BLAST searches
 
-blastn()
+blastsearch()
 {
 cat "$i" | while read line
 do
-blastn -query "$rawreads_dir"/fafiles/joined_"$line".fasta -db "$rawreads_dir"phix_control/phix.blastdb -evalue 0.001 -outfmt 6 -out "$rawreads_dir"phix_control/"$line".blastn   #do blastn search
+echo "Blasting $line against PhiX." | tee -a demultiplexing_logs.txt
+blastn -query "$rawreads_dir"fafiles/joined_"$line".fasta -db "$rawreads_dir"phix_control/phix.blastdb -evalue 0.001 -outfmt 6 -out "$rawreads_dir"phix_control/"$line".blastn   #do blastn search
 done
 }
 
 
 for i in "$rawreads_dir"*.tmpp
 do
-blastn &   #works in parallel for njobs set
+blastsearch &   #works in parallel for njobs set
 done
 
 wait
 
+date | tee -a demultiplexing_logs.txt
+echo "Blast searches has finished." | tee -a demultiplexing_logs.txt
+
 #cat "$rawreads_dir"list_individuals.txt | while read line
 #do
 #echo "BLAST search for query $line" | tee -a demultiplexing_logs.txt
-#blastn -query "$rawreads_dir"/fafiles/joined_"$line".fasta -db "$rawreads_dir"phix_control/phix.blastdb -evalue 0.001 -outfmt 6 -out "$rawreads_dir"phix_control/"$line".blastn   #do blastn search
+#blastn -query "$rawreads_dir"fafiles/joined_"$line".fasta -db "$rawreads_dir"phix_control/phix.blastdb -evalue 0.001 -outfmt 6 -out "$rawreads_dir"phix_control/"$line".blastn   #do blastn search
 #done
 
 
 #Filter out PhiX reads from individual FASTq files
-cat "$rawreads_dir"list_individuals.txt | while read line
+phixfilter()
+{
+cat "$i" | while read line
 do
-echo "Filtering PhiX reads from $line" | tee -a demultiplexing_logs.txt
-python phix_filter.py "$rawreads_dir"/fqfiles/joined_"$line".fastq "$rawreads_dir"phix_control/"$line".blastn > "$rawreads_dir"/fqfiles/nophix_"$line".fastq
+echo "Filtering PhiX reads from $line." | tee -a demultiplexing_logs.txt
+python phix_filter.py "$rawreads_dir"fqfiles/joined_"$line".fastq "$rawreads_dir"phix_control/"$line".blastn > "$rawreads_dir"fqfiles/nophix_"$line".fastq
 done
+}
+
+for i in "$rawreads_dir"*.tmpp
+do
+phixfilter &   #works in parallel for njobs set
+done
+
+wait
+
+date | tee -a demultiplexing_logs.txt
+echo "All PhiX filtered." | tee -a demultiplexing_logs.txt
+
+#cat "$rawreads_dir"list_individuals.txt | while read line
+#do
+#echo "Filtering PhiX reads from $line" | tee -a demultiplexing_logs.txt
+#python phix_filter.py "$rawreads_dir"fqfiles/joined_"$line".fastq "$rawreads_dir"phix_control/"$line".blastn > "$rawreads_dir"fqfiles/nophix_"$line".fastq
+#done
 
 fi
 
@@ -267,31 +299,66 @@ bowtie2-build "$reference" "$nameindex"
 
 #SAMTOOLS: DO THE ALIGNMENT
 
-cat "$rawreads_dir"list_individuals.txt | while read line
+bowtie2mapping()
+{
+cat "$i" | while read line
 do
 echo "Mapping $line to reference." | tee -a demultiplexing_logs.txt
-bowtie2 "$bowtieoption" --phred33 --trim5 4 --trim3 10 -x "$nameindex" -U "$rawreads_dir"/fqfiles/nophix_"$line".fastq -S "$rawreads_dir"samfiles/"$line".sam
+bowtie2 "$bowtieoption" --phred33 --trim5 4 --trim3 10 -x "$nameindex" -U "$rawreads_dir"fqfiles/nophix_"$line".fastq -S "$rawreads_dir"samfiles/"$line".sam
 done
+}
+
+for i in "$rawreads_dir"*.tmpp
+do
+bowtie2mapping &   #works in parallel for njobs set
+done
+
+wait
+
+date | tee -a demultiplexing_logs.txt
+echo "Mapping process done." | tee -a demultiplexing_logs.txt
+
+#cat "$rawreads_dir"list_individuals.txt | while read line
+#do
+#echo "Mapping $line to reference." | tee -a demultiplexing_logs.txt
+#bowtie2 "$bowtieoption" --phred33 --trim5 4 --trim3 10 -x "$nameindex" -U "$rawreads_dir"fqfiles/nophix_"$line".fastq -S "$rawreads_dir"samfiles/"$line".sam
+#done
+
 
 #-----------------------------------------------------------------------
 #STATISTCS
 
+
+echo "Starting SAMtools calculations." | tee -a demultiplexing_logs.txt
+
 #SAMTOOLS CALCULATIONS
-cat "$rawreads_dir"list_individuals.txt | while read line
+
+samtoolscalc()
+{
+cat "$i" | while read line
 do
-
-name=`echo "$i" | sed "s/.sam//g"`
-
-echo "$name"
+echo "SAMtools calculations for $line" | tee -a demultiplexing_logs.txt
 
 samtools view -bS "$rawreads_dir"samfiles/"$line".sam > "$rawreads_dir"bamfiles/"$line".bam   #convert SAM to BAM
 samtools sort "$rawreads_dir"bamfiles/"$line".bam "$rawreads_dir"bamfiles/"$line"_sorted.bam  #sort BAM
-
 samtools flagstat "$rawreads_dir"bamfiles/"$line".bam > "$rawreads_dir"bamfiles/"$line".map   #mapping percentage
 samtools depth "$rawreads_dir"bamfiles/"$line"_sorted.bam > "$rawreads_dir"bamfiles/"$line"_sorted.coverage #depth ave
-
 done
 
+}
+
+for i in "$rawreads_dir"*.tmpp
+do
+samtoolscalc &   #works in parallel for njobs set
+done
+
+wait
+
+
+date | tee -a demultiplexing_logs.txt
+echo "All SAMtools calculation is done." | tee -a demultiplexing_logs.txt
+
+echo "Creating tables." | tee -a demultiplexing_logs.txt
 
 #CREATE TABLES
 cat "$rawreads_dir"list_individuals.txt | while read line
@@ -307,6 +374,13 @@ sed -i "s/myave <- read.table (\".*\")/myave <- read.table \(\"$coveragefile\"\)
 ave=`Rscript calc_depth_average.R`
 echo "$i $ave" | tee -a "$rawreads_dir"coverage.txt
 
+date | tee -a demultiplexing_logs.txt
+echo "Tables have been created." | tee -a demultiplexing_logs.txt
+
+
 done
 
 fi
+
+date | tee -a demultiplexing_logs.txt
+echo "De-multiplexing Master has finished." | tee -a demultiplexing_logs.txt
