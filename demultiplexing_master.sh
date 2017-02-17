@@ -300,7 +300,7 @@ do
 echo "SAMtools calculations for $line" | tee -a demultiplexing_logs.txt
 
 samtools view -bS "$rawreads_dir"samfiles/"$line".sam > "$rawreads_dir"bamfiles/"$line".bam   #convert SAM to BAM
-samtools sort "$rawreads_dir"bamfiles/"$line".bam "$rawreads_dir"bamfiles/"$line"_sorted.bam  #sort BAM
+samtools sort "$rawreads_dir"bamfiles/"$line".bam "$rawreads_dir"bamfiles/"$line"_sorted      #sort BAM
 samtools flagstat "$rawreads_dir"bamfiles/"$line".bam > "$rawreads_dir"bamfiles/"$line".map   #mapping percentage
 samtools depth "$rawreads_dir"bamfiles/"$line"_sorted.bam > "$rawreads_dir"bamfiles/"$line"_sorted.coverage #depth ave
 done
