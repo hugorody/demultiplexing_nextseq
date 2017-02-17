@@ -248,6 +248,9 @@ echo "All PhiX filtered." | tee -a demultiplexing_logs.txt
 echo "Removing all extra joined FASTq files. Keeping no-phix FASTq only." | tee -a demultiplexing_logs.txt
 rm "$rawreads_dir"fqfiles/joined*.fastq
 
+rm "$rawreads_dir"*.tmpp
+rm "$rawreads_dir"list_individuals.txt
+
 fi
 
 ########################################################################
