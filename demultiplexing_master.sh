@@ -7,34 +7,41 @@
 ########################################################################
 #                             DEPENDENCIES
 
+#Bowtie2
 #SAMTOOLS
 #FASTX-TOOLKIT
 #BLAST++
 
 #VERIFY DEPENDENCIES
 
-blast=`which blastn`
-makeblast=`which makeblastdb`
-samtools=`which samtools`
-fastq=`which fastq_to_fasta`
+blastdep=`which blastn`
+bowtie2dep=`which bowtie2`
+makeblastdep=`which makeblastdb`
+samtoolsdep=`which samtools`
+fastqdep=`which fastq_to_fasta`
 
-if [ "$blast" = "" ]; then
+if [ "$blastdep" = "" ]; then
 echo "BLAST is not installed"
 break
 fi
 
-if [ "$makeblast" = "" ]; then
+if [ "$makeblastdep" = "" ]; then
 echo "MAKEBLASTDB is not installed"
 break
 fi
 
-if [ "$samtools" = "" ]; then
+if [ "$samtoolsdep" = "" ]; then
 echo "SAMTOOLS is not installed"
 break
 fi
 
-if [ "$fastq" = "" ]; then
+if [ "$fastqdep" = "" ]; then
 echo "FASTX-toolkit is not installed"
+break
+fi
+
+if [ "$bowtie2dep" = "" ]; then
+echo "Bowtie2 is not installed"
 break
 fi
 
