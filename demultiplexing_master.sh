@@ -67,7 +67,7 @@ echo "Path to raw reads directory:"; read rawreads_dir
 echo "ATTENTION: barcodes must have size from 4 to 9pb"
 echo "Path to barcodes file [ID<tab>SEQUENCE]:"; read barcodes_file
 echo "How many threads to use?"; read njobs
-echo "Path to output directory:"; read outputdir
+echo "Path to output directory [you must have already created it]:"; read outputdir
 
 #directories
 mkdir "$outputdir"fqfiles/ #FASTq FILES
@@ -87,16 +87,14 @@ echo "Pick the preset Bowtie2 option: --very-fast-local, --fast-local, --sensiti
 mkdir "$outputdir"samfiles/ #SAM FILES
 mkdir "$outputdir"bamfiles/ #BAM FILES
 
-
-
 #verify if rawreads_dir has been aready created
-
 if [ "$rawreads_dir" = "" ]; then
-
 echo "Path to raw reads directory:"; read rawreads_dir
-
 fi
 
+if [ "$outputdir" = "" ]; then
+echo "Path to output directory [you must have already created it]:"; read outputdir
+fi
 
 fi
 ########################################################################
