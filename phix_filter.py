@@ -53,4 +53,4 @@ for i in fgen:
 for i in seqs.items():
     header= i[0]
     seq = i[1]
-    print "@"+header+"\n"+seq.replace("+", "\n+\n")+"\n"
+    print "@"+header+"\n"+seq.replace("+", "\n+\n")
