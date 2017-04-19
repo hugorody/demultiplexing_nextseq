@@ -73,7 +73,7 @@ echo "Path to output directory [you must have already created it]:"; read output
 mkdir "$outputdir"fqfiles/ #FASTq FILES
 mkdir "$outputdir"fafiles/ #FASTa FILES
 mkdir "$outputdir"phix_control/  #PhiX control files
-
+mkdir "$outputdir"fqjoined/
 fi
 
 #BOWTIE2 PIPELINE
@@ -91,6 +91,7 @@ fi
 #directories
 mkdir "$outputdir"samfiles/ #SAM FILES
 mkdir "$outputdir"bamfiles/ #BAM FILES
+
 
 fi
 ########################################################################
@@ -255,11 +256,14 @@ done
 
 wait
 
+
 date | tee -a "$outputdir"demultiplexing_logs.txt
 echo "All PhiX filtered." | tee -a "$outputdir"demultiplexing_logs.txt
 
-echo "Removing all extra joined FASTq files. Keeping no-phix FASTq only." | tee -a "$outputdir"demultiplexing_logs.txt
-rm "$outputdir"fqfiles/joined*.fastq
+echo "Moving all extra joined FASTq files to fqjoined directory. Keeping no-phix FASTq only." | tee -a "$outputdir"demultiplexing_logs.txt
+mv "$outputdir"fqfiles/joined*.fastq "$outputdir"fqjoined/
+
+
 
 #rm "$rawreads_dir"*.tmpp
 #rm "$rawreads_dir"list_individuals.txt
