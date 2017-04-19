@@ -83,18 +83,14 @@ if [ "$bowtie2_pipeline" = "1" ]; then
 echo "Path to reference *.fasta file [extention must be named fasta (and not fas or fa)]:"; read reference
 echo "Pick the preset Bowtie2 option: --very-fast-local, --fast-local, --sensitive-local, --very-sensitive-local:"; read bowtieoption
 
-#directories
-mkdir "$outputdir"samfiles/ #SAM FILES
-mkdir "$outputdir"bamfiles/ #BAM FILES
-
-#verify if rawreads_dir has been aready created
-if [ "$rawreads_dir" = "" ]; then
-echo "Path to raw reads directory:"; read rawreads_dir
-fi
-
+#verify if outputdir has been aready created
 if [ "$outputdir" = "" ]; then
 echo "Path to output directory [you must have already created it]:"; read outputdir
 fi
+
+#directories
+mkdir "$outputdir"samfiles/ #SAM FILES
+mkdir "$outputdir"bamfiles/ #BAM FILES
 
 fi
 ########################################################################
