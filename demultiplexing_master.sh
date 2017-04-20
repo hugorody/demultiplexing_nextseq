@@ -317,9 +317,9 @@ do
 echo "SAMtools calculations for $line" | tee -a "$outputdir"demultiplexing_logs.txt
 
 samtools view -bS "$outputdir"samfiles/"$line".sam > "$outputdir"bamfiles/"$line".bam   #convert SAM to BAM
-samtools sort "$outputdir"bamfiles/"$line".bam > "$outputdir"bamfiles/"$line"_sorted      #sort BAM
+samtools sort "$outputdir"bamfiles/"$line".bam > "$outputdir"bamfiles/"$line".bam_sorted      #sort BAM
 samtools flagstat "$outputdir"bamfiles/"$line".bam > "$outputdir"bamfiles/"$line".map   #mapping percentage
-samtools depth "$outputdir"bamfiles/"$line"_sorted.bam > "$outputdir"bamfiles/"$line"_sorted.coverage #depth ave
+samtools depth "$outputdir"bamfiles/"$line".bam_sorted > "$outputdir"bamfiles/"$line"_sorted.coverage #depth ave
 done
 }
 
@@ -354,7 +354,6 @@ echo "Tables have been created." | tee -a "$outputdir"demultiplexing_logs.txt
 
 done
 
-fi
 
 date | tee -a "$outputdir"demultiplexing_logs.txt
 echo "De-multiplexing Master has finished." | tee -a "$outputdir"demultiplexing_logs.txt
