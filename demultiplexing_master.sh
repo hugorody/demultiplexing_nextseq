@@ -303,9 +303,7 @@ wait
 date | tee -a "$outputdir"demultiplexing_logs.txt
 echo "Mapping process done." | tee -a "$outputdir"demultiplexing_logs.txt
 
-#-----------------------------------------------------------------------
 #STATISTCS
-'''
 echo "Starting SAMtools calculations." | tee -a "$outputdir"demultiplexing_logs.txt
 
 #SAMTOOLS CALCULATIONS
@@ -334,7 +332,6 @@ date | tee -a "$outputdir"demultiplexing_logs.txt
 echo "All SAMtools calculation is done." | tee -a "$outputdir"demultiplexing_logs.txt
 
 echo "Creating tables." | tee -a "$outputdir"demultiplexing_logs.txt
-'''
 
 #CREATE TABLES
 cat "$outputdir"list_individuals.txt | while read line
@@ -347,19 +344,20 @@ echo "$line $number" | tee -a "$outputdir"mappedreads.txt
 
 
 #depth average table
-coveragefile=`echo "$outputdir"bamfiles/"$line"_sorted.coverage | sed "s/\//+/g"` #here the bars are replaced by + symbol because the variable will be used to feed R script inside the following sed expression
+coveragefile=`echo "$outputdir"bamfiles/"$line"_sorted.coverage | sed "s/\//+/g"`
 
 sed -i 's/myave <- read.table (".*")/myave <- read.table ("'"$coveragefile"'")/g' calc_depth_average.R
-sed -i "s/+/\//g" calc_depth_average.R #now the + symbol are replaced back to bars
+sed -i "s/+/\//g" calc_depth_average.R
 
 ave=`Rscript calc_depth_average.R`
 
-echo "$i $ave" | tee -a "$outputdir"coverage.txt
+echo "$line $ave" | tee -a "$outputdir"coverage.txt
 
 #date | tee -a "$outputdir"demultiplexing_logs.txt
 echo "Tables have been created." | tee -a "$outputdir"demultiplexing_logs.txt
 
 done
+
 
 #date | tee -a "$outputdir"demultiplexing_logs.txt
 echo "De-multiplexing Master has finished." | tee -a "$outputdir"demultiplexing_logs.txt
