@@ -353,11 +353,26 @@ ave=`Rscript calc_depth_average.R`
 
 echo "$line $ave" | tee -a "$outputdir"coverage.txt
 
-#date | tee -a "$outputdir"demultiplexing_logs.txt
 echo "Tables have been created." | tee -a "$outputdir"demultiplexing_logs.txt
 
 done
 
+#Create final table
+echo "Creating final table." | tee -a "$outputdir"demultiplexing_logs.txt
+echo "Ind NoPhix_Reads Phix_Reads Depth_Ave %Mapping" | tee -a "$outputdir"finaltable.txt
 
-#date | tee -a "$outputdir"demultiplexing_logs.txt
+cat "$outputdir"list_individuals.txt | while read line
+do
+
+nphixreads=`grep "^@" "$outputdir"/fqfiles/*"$line".fastq | wc -l`
+phixreads=`awk {'print $1'} "$outputdir"/phix_control/"$line".blastn | sort | uniq | wc -l`
+depthave=`grep "^$line" "$outputdir"coverage.txt | awk {'print $3'} | head -1`
+mapp=`grep "^$line" "$outputdir"mappedreads.txt | awk {'print $2'} | head -1`
+
+
+echo "$line $nphixreads $phixreads $depthave $mapp" | tee -a "$outputdir"finaltable.txt
+done
+
+#END
+date | tee -a "$outputdir"demultiplexing_logs.txt
 echo "De-multiplexing Master has finished." | tee -a "$outputdir"demultiplexing_logs.txt
