@@ -303,7 +303,9 @@ wait
 date | tee -a "$outputdir"demultiplexing_logs.txt
 echo "Mapping process done." | tee -a "$outputdir"demultiplexing_logs.txt
 
+#-----------------------------------------------------------------------
 #STATISTCS
+
 echo "Starting SAMtools calculations." | tee -a "$outputdir"demultiplexing_logs.txt
 
 #SAMTOOLS CALCULATIONS
@@ -342,9 +344,11 @@ number=`cat "$outputdir"bamfiles/"$line".map | grep "mapped" | head -1 | sed "s/
 
 echo "$line $number" | tee -a "$outputdir"mappedreads.txt
 
-
 #depth average table
 coveragefile=`echo "$outputdir"bamfiles/"$line"_sorted.coverage | sed "s/\//+/g"`
+
+echo "============================> $coveragefile $line $number"
+
 
 sed -i 's/myave <- read.table (".*")/myave <- read.table ("'"$coveragefile"'")/g' calc_depth_average.R
 sed -i "s/+/\//g" calc_depth_average.R
@@ -353,12 +357,20 @@ ave=`Rscript calc_depth_average.R`
 
 echo "$line $ave" | tee -a "$outputdir"coverage.txt
 
+#date | tee -a "$outputdir"demultiplexing_logs.txt
 echo "Tables have been created." | tee -a "$outputdir"demultiplexing_logs.txt
 
 done
 
-#Create final table
-echo "Creating final table." | tee -a "$outputdir"demultiplexing_logs.txt
+#date | tee -a "$outputdir"demultiplexing_logs.txt
+echo "De-multiplexing Master has finished." | tee -a "$outputdir"demultiplexing_logs.txt
+
+#----------------------------------------------------------------------------------
+#CREATE FINAL TABLE  finaltable.txt
+
+date
+
+echo "Creating final table."
 echo "Ind NoPhix_Reads Phix_Reads Depth_Ave %Mapping" | tee -a "$outputdir"finaltable.txt
 
 cat "$outputdir"list_individuals.txt | while read line
@@ -373,6 +385,5 @@ mapp=`grep "^$line" "$outputdir"mappedreads.txt | awk {'print $2'} | head -1`
 echo "$line $nphixreads $phixreads $depthave $mapp" | tee -a "$outputdir"finaltable.txt
 done
 
-#END
-date | tee -a "$outputdir"demultiplexing_logs.txt
-echo "De-multiplexing Master has finished." | tee -a "$outputdir"demultiplexing_logs.txt
+date
+echo "end!"
