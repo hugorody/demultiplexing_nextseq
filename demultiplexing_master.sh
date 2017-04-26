@@ -263,11 +263,6 @@ echo "All PhiX filtered." | tee -a "$outputdir"demultiplexing_logs.txt
 echo "Moving all extra joined FASTq files to fqjoined directory. Keeping no-phix FASTq only." | tee -a "$outputdir"demultiplexing_logs.txt
 mv "$outputdir"fqfiles/joined*.fastq "$outputdir"fqjoined/
 
-
-
-#rm "$rawreads_dir"*.tmpp
-#rm "$rawreads_dir"list_individuals.txt
-
 fi
 
 ########################################################################
@@ -347,9 +342,6 @@ echo "$line $number" | tee -a "$outputdir"mappedreads.txt
 #depth average table
 coveragefile=`echo "$outputdir"bamfiles/"$line"_sorted.coverage | sed "s/\//+/g"`
 
-echo "============================> $coveragefile $line $number"
-
-
 sed -i 's/myave <- read.table (".*")/myave <- read.table ("'"$coveragefile"'")/g' calc_depth_average.R
 sed -i "s/+/\//g" calc_depth_average.R
 
@@ -366,7 +358,7 @@ done
 echo "De-multiplexing Master has finished." | tee -a "$outputdir"demultiplexing_logs.txt
 
 #----------------------------------------------------------------------------------
-#CREATE FINAL TABLE  finaltable.txt
+#                         CREATE FINAL TABLE  finaltable.txt
 
 date
 
@@ -380,7 +372,6 @@ nphixreads=`grep "^@" "$outputdir"/fqfiles/*"$line".fastq | wc -l`
 phixreads=`awk {'print $1'} "$outputdir"/phix_control/"$line".blastn | sort | uniq | wc -l`
 depthave=`grep "^$line" "$outputdir"coverage.txt | awk {'print $3'} | head -1`
 mapp=`grep "^$line" "$outputdir"mappedreads.txt | awk {'print $2'} | head -1`
-
 
 echo "$line $nphixreads $phixreads $depthave $mapp" | tee -a "$outputdir"finaltable.txt
 done
