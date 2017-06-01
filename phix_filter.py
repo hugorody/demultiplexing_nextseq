@@ -1,6 +1,7 @@
 #!/usr/bin/python
 #Read filter FASTq file based on a BLAST file result
 #usage: python script.py file.fastq file.blastn
+#ATTENTION: this script uses lots of RAM memory and was written to manage fastq files of 1Gb size in average
  
 import sys
  
