@@ -52,6 +52,7 @@ echo "DEFINE WHICH PIPELINES TO RUN"
 echo "Select 1 to perform pipeline, or 0 to jump it."
 echo "De-multiplexing:"; read demultiplexing_pipeline
 echo "Bowtie2 Mapping:"; read bowtie2_pipeline
+echo "SAMtools statistics:" read samtools_statistics
 
 ########################################################################
 #                   DEFINE VARIABLES AND DIRECTORIES
@@ -92,8 +93,17 @@ fi
 mkdir "$outputdir"samfiles/ #SAM FILES
 mkdir "$outputdir"bamfiles/ #BAM FILES
 
+fi
+
+#check if output directory is given if samtools_statistics is selected to run
+if [ "$samtools_statistics" = "1" ]; then
+
+if [ "$outputdir" = "" ]; then
+echo "Path to output directory [you must have already created it]:"; read outputdir
+fi
 
 fi
+
 ########################################################################
 #                               LOG FILE
 
@@ -301,6 +311,8 @@ echo "Mapping process done." | tee -a "$outputdir"demultiplexing_logs.txt
 #-----------------------------------------------------------------------
 #STATISTCS
 
+if [ "$samtools_statistics" = "1" ]; then
+
 echo "Starting SAMtools calculations." | tee -a "$outputdir"demultiplexing_logs.txt
 
 #SAMTOOLS CALCULATIONS
@@ -356,25 +368,4 @@ done
 
 #date | tee -a "$outputdir"demultiplexing_logs.txt
 echo "De-multiplexing Master has finished." | tee -a "$outputdir"demultiplexing_logs.txt
-
-#----------------------------------------------------------------------------------
-#                         CREATE FINAL TABLE  finaltable.txt
-
-date
-
-echo "Creating final table."
-echo "Ind NoPhix_Reads Phix_Reads Depth_Ave %Mapping" | tee -a "$outputdir"finaltable.txt
-
-cat "$outputdir"list_individuals.txt | while read line
-do
-
-nphixreads=`grep "^@" "$outputdir"/fqfiles/*"$line".fastq | wc -l`
-phixreads=`awk {'print $1'} "$outputdir"/phix_control/"$line".blastn | sort | uniq | wc -l`
-depthave=`grep "^$line" "$outputdir"coverage.txt | awk {'print $3'} | head -1`
-mapp=`grep "^$line" "$outputdir"mappedreads.txt | awk {'print $2'} | head -1`
-
-echo "$line $nphixreads $phixreads $depthave $mapp" | tee -a "$outputdir"finaltable.txt
-done
-
-date
-echo "end!"
+fi
