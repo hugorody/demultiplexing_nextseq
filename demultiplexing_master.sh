@@ -308,8 +308,8 @@ wait
 date | tee -a "$outputdir"demultiplexing_logs.txt
 echo "Mapping process done." | tee -a "$outputdir"demultiplexing_logs.txt
 
-#-----------------------------------------------------------------------
-#STATISTCS
+########################################################################
+#                         SAMTOOLS STATISTCS
 
 if [ "$samtools_statistics" = "1" ]; then
 
