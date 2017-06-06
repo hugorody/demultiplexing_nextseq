@@ -181,6 +181,7 @@ if [ "$demultiplexing_pipeline" = "1" ]; then
     for i in "$rawreads_dir"*.fastq
     do
         idrun=$(($idrun+1))
+	echo "Demultplexing run $idrun started." | tee -a "$outputdir"demultiplexing_logs.txt
         demultiplexing &
     done
 
