@@ -48,7 +48,7 @@ fi
 ########################################################################
 #                    DEFINE WHICH PIPELINES TO RUN
 
-echo "-------------------------------------------------------------\nDEFINE WHICH PIPELINES TO RUN\n-------------------------------------------------------------"
+echo -e "-------------------------------------------------------------\nDEFINE WHICH PIPELINES TO RUN\n-------------------------------------------------------------"
 echo "Select 1 to perform pipeline, or 0 to jump it."
 echo "De-multiplexing:"; read demultiplexing_pipeline
 echo "Bowtie2 Mapping:"; read bowtie2_pipeline
@@ -60,7 +60,7 @@ echo "SAMtools statistics:"; read samtools_statistics
 #DE-MULTIPLEXING PIPELINE
 if [ "$demultiplexing_pipeline" = "1" ]; then
     #variables
-    echo "-------------------------------------------------------------\nDE-MULTIPLEXING PIPELINE\n-------------------------------------------------------------"
+    echo -e "-------------------------------------------------------------\nDE-MULTIPLEXING PIPELINE\n-------------------------------------------------------------"
     echo "All paths to directories must be entered as: /home/user/directory/"
     echo "RAW READS MUST BE NAMED WITH EXTENTION .fastq"
     echo "-------------------------------------------------------------\nPath to raw reads directory:"; read rawreads_dir
@@ -82,7 +82,7 @@ fi
 if [ "$bowtie2_pipeline" = "1" ]; then
 
     #variables
-    echo "-------------------------------------------------------------\nBOWTIE 2 PIPELINE\n-------------------------------------------------------------"
+    echo -e "-------------------------------------------------------------\nBOWTIE 2 PIPELINE\n-------------------------------------------------------------"
     echo "Path to reference *.fasta file [extention must be named fasta (and not fas or fa)]:"; read reference
     echo "Pick the preset Bowtie2 option: --very-fast-local, --fast-local, --sensitive-local, --very-sensitive-local:"; read bowtieoption
 
@@ -181,7 +181,7 @@ if [ "$demultiplexing_pipeline" = "1" ]; then
     for i in "$rawreads_dir"*.fastq
     do
         idrun=$(($idrun+1))
-	echo "Demultplexing run $idrun started." | tee -a "$outputdir"demultiplexing_logs.txt
+	    echo "Demultplexing run $idrun started." | tee -a "$outputdir"demultiplexing_logs.txt
         demultiplexing &
     done
 
@@ -191,11 +191,8 @@ if [ "$demultiplexing_pipeline" = "1" ]; then
     echo "De-multiplexing done!" | tee -a "$outputdir"demultiplexing_logs.txt
 
     #Join files to get individual complete files
-    cat "$outputdir"list_individuals.txt | while read line
-    do
-        cat "$outputdir"fqfiles/*"$line".fq > "$outputdir"fqfiles/joined_"$line".fastq  #individuals final files
-    done
-
+    python merge_fastq_demultiplexing.py "$outputdir"list_individuals.txt "$outputdir"fqfiles/  #individuals final files
+    
     echo "FASTq files joined." | tee -a "$outputdir"demultiplexing_logs.txt
 
     rm "$outputdir"fqfiles/*bar*       #remove all temporary fastq files
