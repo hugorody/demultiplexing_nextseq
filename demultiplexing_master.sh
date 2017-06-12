@@ -63,7 +63,7 @@ if [ "$demultiplexing_pipeline" = "1" ]; then
     echo -e "-------------------------------------------------------------\nDE-MULTIPLEXING PIPELINE\n-------------------------------------------------------------"
     echo "All paths to directories must be entered as: /home/user/directory/"
     echo "RAW READS MUST BE NAMED WITH EXTENTION .fastq"
-    echo "-------------------------------------------------------------\nPath to raw reads directory:"; read rawreads_dir
+    echo -e "-------------------------------------------------------------\nPath to raw reads directory:"; read rawreads_dir
     echo
     echo "ATTENTION: barcodes must have size from 4 to 9pb"
     echo
@@ -191,7 +191,7 @@ if [ "$demultiplexing_pipeline" = "1" ]; then
     echo "De-multiplexing done!" | tee -a "$outputdir"demultiplexing_logs.txt
 
     #Join files to get individual complete files
-    python merge_fastq_demultiplexing.py "$outputdir"list_individuals.txt "$outputdir"fqfiles/  #individuals final files
+    python merge_fastq_demultiplexing.py "$outputdir"list_individuals.txt "$outputdir"fqjoined/  #individuals final files
     
     echo "FASTq files joined." | tee -a "$outputdir"demultiplexing_logs.txt
 
