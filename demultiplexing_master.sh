@@ -97,7 +97,7 @@ if [ "$bowtie2_pipeline" = "1" ]; then
 
 fi
 
-#check if output directory is given if samtools_statistics is selected to run
+#STATISTICS PIPELINE
 if [ "$samtools_statistics" = "1" ]; then
 
     if [ "$outputdir" = "" ]; then
@@ -191,12 +191,13 @@ if [ "$demultiplexing_pipeline" = "1" ]; then
     echo "De-multiplexing done!" | tee -a "$outputdir"demultiplexing_logs.txt
 
     #Join files to get individual complete files
-    python merge_fastq_demultiplexing.py "$outputdir"list_individuals.txt "$outputdir"fqjoined/  #individuals final files
+    python merge_fastq_demultiplexing.py "$outputdir"list_individuals.txt "$outputdir"fqfiles/ "$outputdir"fqjoined/ #individuals final files
     
     echo "FASTq files joined." | tee -a "$outputdir"demultiplexing_logs.txt
 
-    rm "$outputdir"fqfiles/*bar*       #remove all temporary fastq files
+    rm "$outputdir"fqfiles/*bar*       #remove all temporary fq files
 
+	date | tee -a "$outputdir"demultiplexing_logs.txt
     echo "All temporary files were removed." | tee -a "$outputdir"demultiplexing_logs.txt
 
     #-----------------------------------------------------------------------
