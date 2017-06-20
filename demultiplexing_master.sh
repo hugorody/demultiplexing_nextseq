@@ -61,15 +61,13 @@ echo "SAMtools statistics:"; read samtools_statistics
 if [ "$demultiplexing_pipeline" = "1" ]; then
     #variables
     echo -e "-------------------------------------------------------------\nDE-MULTIPLEXING PIPELINE\n-------------------------------------------------------------"
-    echo "All paths to directories must be entered as: /home/user/directory/"
-    echo "RAW READS MUST BE NAMED WITH EXTENTION .fastq"
+    echo -e "All paths to directories must be entered as: /home/user/directory/"
+    echo -e "RAW READS MUST BE NAMED WITH EXTENTION .fastq"
     echo -e "-------------------------------------------------------------\nPath to raw reads directory:"; read rawreads_dir
-    echo
-    echo "ATTENTION: barcodes must have size from 4 to 9pb"
-    echo
-    echo "Path to barcodes file [ID<tab>SEQUENCE]:"; read barcodes_file
-    echo "How many threads to use?"; read njobs
-    echo "Path to output directory [you must have already created it]:"; read outputdir
+    echo -e "\nATTENTION: barcodes must have size from 4 to 9pb\n"
+    echo -e "\nPath to barcodes file [ID<tab>SEQUENCE]:"; read barcodes_file
+	echo -e "\nHow many threads to use?"; read njobs
+    echo -e "\nPath to output directory [you must have already created it]:"; read outputdir
 
     #directories
     mkdir "$outputdir"fqfiles/ #FASTq FILES
@@ -191,11 +189,13 @@ if [ "$demultiplexing_pipeline" = "1" ]; then
     echo "De-multiplexing done!" | tee -a "$outputdir"demultiplexing_logs.txt
 
     #Join files to get individual complete files
-    python merge_fastq_demultiplexing.py "$outputdir"list_individuals.txt "$outputdir"fqfiles/ "$outputdir"fqjoined/ #individuals final files
-    
+	date
+	echo "Merging individuals FASTQ files..." | tee -a "$outputdir"demultiplexing_logs.txt
+    python merge_fastq_demultiplexing.py "$outputdir"list_individuals.txt "$outputdir"fqfiles/ #individuals final files
     echo "FASTq files joined." | tee -a "$outputdir"demultiplexing_logs.txt
+	date | tee -a "$outputdir"demultiplexing_logs.txt
 
-    rm "$outputdir"fqfiles/*bar*       #remove all temporary fq files
+    #rm "$outputdir"fqfiles/*bar*       #remove all temporary fq files
 
 	date | tee -a "$outputdir"demultiplexing_logs.txt
     echo "All temporary files were removed." | tee -a "$outputdir"demultiplexing_logs.txt
