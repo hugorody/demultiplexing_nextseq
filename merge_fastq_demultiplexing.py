@@ -6,7 +6,6 @@ import glob, os
 
 file1 = sys.argv[1] #list containing individuals ids separated by breaklines
 dir1 = sys.argv[2] #input directory, where the fq files
-dir2 = sys.argv[3] #output directory, to write the fastq files
 
 #create a list of individuals based on file1
 listindividuals = []
@@ -19,7 +18,7 @@ with open(file1) as set1:
 for i in listindividuals:
 
     searchfile = i+".fq"
-    outputname = str(dir2)+str(i)+".fastq" #outputname is set to write in the output directory 2
+    outputname = str(dir1)+"joined_"+str(i)+".fastq" #outputname is set to write in the output directory 2
     output = open(outputname,'w')
 
     lisftoffiles = [] #list of files that match to individual
